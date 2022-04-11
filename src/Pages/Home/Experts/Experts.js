@@ -21,7 +21,7 @@ const Experts = () => {
 
 
     return (
-        <div>
+        <div className='container'>
             <h2 className='text-primary text-center mt-5'>0ur Experts</h2>
             <div className='row mx-auto'>
                 {
