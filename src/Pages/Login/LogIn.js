@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link, useNavigate } from 'react-router-dom';
+import auth from '../../fairbase.init';
 
 const LogIn = () => {
 
@@ -8,11 +10,26 @@ const LogIn = () => {
     const passwordRef = useRef('')
     const navigate = useNavigate()
 
+    const [
+        signInWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useSignInWithEmailAndPassword(auth);
+
+    if (user) {
+        navigate('/home')
+    }
+
     const handelSubmit = (e) => {
         e.preventDefault()
         const email = emailRef.current.value
         const password = passwordRef.current.value
-        console.log(email, password);
+
+        signInWithEmailAndPassword(email, password)
+    }
+    const navigateRegister = (e) => {
+        navigate('/register')
     }
 
     return (

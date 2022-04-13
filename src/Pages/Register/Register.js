@@ -1,15 +1,27 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import auth from '../../fairbase.init';
 import './Register.css'
 
 const Register = () => {
     const navigate = useNavigate()
+
+    const [createUserWithEmailAndPassword, user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
+
+    if (user) {
+        navigate('/home')
+    }
+
 
     const handelfromSubmit = e => {
         e.preventDefault()
         const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
+        createUserWithEmailAndPassword(email, password)
+
+
     }
 
 
@@ -30,7 +42,8 @@ const Register = () => {
                 <br />
 
                 <input type="submit" value='register' />
-                <p className='my-2 p-auto'>Already have an account? <Link to='/login' className='text-danger text-decoration-none' onClick={() => navigate('/login')}>Please logIn</Link></p>
+                <p className='my-2 p-auto'>Already have an account? <Link to='/login'
+                    className='text-danger text-decoration-none' onClick={() => navigate('/login')}>Please logIn</Link></p>
             </form>
         </div>
     );
