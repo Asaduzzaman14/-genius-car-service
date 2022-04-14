@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../fairbase.init';
@@ -6,6 +6,7 @@ import './Register.css'
 import SocilaLogin from '../Login/SocilaLogin/SocilaLogin';
 
 const Register = () => {
+    const [agree, setAgree] = useState(false)
     const navigate = useNavigate()
 
     const [createUserWithEmailAndPassword, user, loading, error,] = useCreateUserWithEmailAndPassword(auth);
@@ -20,7 +21,11 @@ const Register = () => {
         const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
-        createUserWithEmailAndPassword(email, password)
+        // const checked = e.target.trams.checked
+
+        if (agree) {
+            createUserWithEmailAndPassword(email, password)
+        }
 
 
     }
@@ -42,10 +47,12 @@ const Register = () => {
                 <input type="password" name='password' id='' placeholder='password' required />
                 <br />
 
-                <input type="checkbox" id="trams" />
-                <label htmlFor="trams">Accept Genius Car Terms amd Condation</label>
+                <input onClick={() => setAgree(!agree)} type="checkbox" name='trams' id="trams" />
+                {/* <label className={agree ? 'ps-2' : ' ps-2 text-danger'} htmlFor="trams">Accept Genius Car Terms and Condation</label> */}
+                <label className={`ps-2 ${agree ? '' : 'text-danger'}`} htmlFor="trams">Accept Genius Car Terms and Condation</label>
 
-                <input className='mt-3' type="submit" value='register' />
+                <input disabled={agree} className='mt-3 bg-primary ' type="submit" value='register' />
+
                 <p className='my-2 p-auto'>Already have an account? <Link to='/login'
                     className='text-danger text-decoration-none' onClick={() => navigate('/login')}>Please logIn</Link></p>
                 <SocilaLogin></SocilaLogin>
