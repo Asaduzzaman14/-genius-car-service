@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../fairbase.init';
 import './Register.css'
+import SocilaLogin from '../Login/SocilaLogin/SocilaLogin';
 
 const Register = () => {
     const navigate = useNavigate()
@@ -41,9 +42,13 @@ const Register = () => {
                 <input type="password" name='password' id='' placeholder='password' required />
                 <br />
 
-                <input type="submit" value='register' />
+                <input type="checkbox" id="trams" />
+                <label htmlFor="trams">Accept Genius Car Terms amd Condation</label>
+
+                <input className='mt-3' type="submit" value='register' />
                 <p className='my-2 p-auto'>Already have an account? <Link to='/login'
                     className='text-danger text-decoration-none' onClick={() => navigate('/login')}>Please logIn</Link></p>
+                <SocilaLogin></SocilaLogin>
             </form>
         </div>
     );
