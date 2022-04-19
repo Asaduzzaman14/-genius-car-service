@@ -13,6 +13,11 @@ const SocilaLogin = () => {
     const [signInWithGithub, user2, loading2, error2] = useSignInWithGithub(auth);
 
     let hookError;
+
+
+    if (loading) {
+        return <loading></loading>
+    }
     if (error || error2) {
         hookError = <div>
             <p>Error: {error?.message} {error2?.message}</p>

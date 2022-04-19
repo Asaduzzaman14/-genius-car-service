@@ -1,16 +1,25 @@
 import React, { useRef } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form } from
+    'react-bootstrap';
 import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGithub } from 'react-firebase-hooks/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../fairbase.init';
+import Loading from './Loading/Loading';
 import SocilaLogin from './SocilaLogin/SocilaLogin';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import PageTitle from '../Shared/PageTitle/PageTitle';
 
 const LogIn = () => {
+
+
+
 
     const emailRef = useRef('')
     const passwordRef = useRef('')
     const navigate = useNavigate()
     const location = useLocation()
+
 
     const from = location.state?.from.pathname || '/'
 
@@ -24,6 +33,9 @@ const LogIn = () => {
             <p>Error: {error?.message} </p>
         </div>
 
+    }
+    if (loading || sending) {
+        return <Loading></Loading>
     }
 
 
@@ -39,27 +51,36 @@ const LogIn = () => {
         signInWithEmailAndPassword(email, password)
 
     }
-    // const navigateRegister = (e) => {
-    //     navigate('/register')
-    // }
+
     const resetPassword = async () => {
         const email = emailRef.current.value
-        await sendPasswordResetEmail(email)
+        if (email) {
+
+            await sendPasswordResetEmail(email)
+            toast('send email')
+        }
+        else {
+            toast('please enter your email')
+        }
     }
 
     return (
         <div>
+            <PageTitle
+                title={'login'}
+            ></PageTitle>
+
             <h2 className='text-center mt-5 text-primary'>Please log in</h2>
             <Form onSubmit={handelSubmit} className='w-50 mx-auto mt-5'>
 
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control ref={emailRef} type="email" placeholder="Enter email" />
+                    <Form.Control ref={emailRef} type="email" placeholder="Enter email" required />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control ref={passwordRef} type="password" placeholder="Password" />
+                    <Form.Control ref={passwordRef} type="password" placeholder="Password" required />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -73,10 +94,11 @@ const LogIn = () => {
                 </Button>
 
                 <p className='my-2 p-auto'>New to Genius Car? <Link to='/register' className='text-primary text-decoration-none' onClick={() => navigate('/register')}>Please Register</Link></p>
-                <p className='my-2 p-auto'>Forgete password ? <Link to='/register' className='text-primary text-decoration-none' onClick={() => resetPassword()}>Resate password</Link></p>
+                <p className='my-2 p-auto'>Forgete password ? <button className='btn btn-link text-primary text-decoration-none' onClick={() => resetPassword()}>Resate password</button></p>
                 <SocilaLogin></SocilaLogin>
             </Form>
             <p>{hookError}</p>
+            <ToastContainer />
         </div>
     );
 };
