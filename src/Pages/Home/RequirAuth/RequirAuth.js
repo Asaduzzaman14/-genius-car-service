@@ -1,6 +1,7 @@
 import React from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useAuthState, useSendEmailVerification } from 'react-firebase-hooks/auth';
 import { Navigate, useLocation } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import auth from '../../../fairbase.init';
 import Loading from '../../Login/Loading/Loading';
 
@@ -9,6 +10,11 @@ const RequirAuth = ({ children }) => {
     const [user, loading] = useAuthState(auth);
     const location = useLocation()
 
+    const [sendEmailVerification, sending, verifyError] = useSendEmailVerification(
+        auth
+    );
+
+
     if (loading) {
         return <Loading></Loading>
     }
@@ -16,6 +22,23 @@ const RequirAuth = ({ children }) => {
     if (!user) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
+    if (!user.emailVerified) {
+        return <div>
+            <h3 className='text-danger'>your email is not verify</h3>
+            <h5 className='text-success'>please verify your email</h5>
+
+            <button
+                onClick={async () => {
+                    await sendEmailVerification();
+                    toast('Sent email');
+                }}
+            >
+                send Verification email email
+            </button>
+            <ToastContainer />
+        </div>
+    }
+
 
     return children
 };

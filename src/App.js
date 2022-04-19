@@ -16,8 +16,14 @@ function App() {
     <div className>
       <Header></Header>
       <Routes>
-        <Route path="/" element={<Home></Home>}></Route>
-        <Route path="/home" element={<Home></Home>}></Route>
+        <Route path="/" element={<RequirAuth>
+          <Home></Home>
+        </RequirAuth>}></Route>
+
+        <Route path="/home" element={<RequirAuth>
+          <Home></Home>
+        </RequirAuth>}></Route>
+
         <Route path="/service/:servceId" element={<ServiceDetail></ServiceDetail>}></Route>
         <Route path="/about" element={<About></About>}></Route>
         <Route path='/login' element={<LogIn></LogIn>}></Route>
@@ -33,7 +39,7 @@ function App() {
       <Footer></Footer>
 
 
-    </div>
+    </div >
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useSendPasswordResetEmail, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../../fairbase.init';
 import './Register.css'
 import SocilaLogin from '../Login/SocilaLogin/SocilaLogin';
@@ -13,6 +13,7 @@ const Register = () => {
     const navigate = useNavigate()
     const [createUserWithEmailAndPassword, user, loading, error,] = useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
     const [updateProfile] = useUpdateProfile(auth);
+
 
     if (user) {
         console.log(user);
@@ -27,7 +28,6 @@ const Register = () => {
         // const checked = e.target.trams.checked
         await createUserWithEmailAndPassword(email, password)
         await updateProfile({ displayName: name });
-
         navigate('/home')
     }
 
