@@ -1,41 +1,57 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { Toast } from 'react-bootstrap';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import auth from '../../fairbase.init';
 import useServiceDetail from '../../hooks/useServiceDetail';
 
 const Checkout = () => {
     const { servceId } = useParams()
     const [service] = useServiceDetail(servceId)
+    const [user] = useAuthState(auth)
 
-    const [user, setuser] = useState({
-        name: 'Akbor thge grate',
-        email: 'emial@email.com',
-        address: 'ThijMahal Rood',
-        phone: '0193333333333'
-    })
-
-
-    const handelDataChange = (e) => {
-        console.log(e.target.value);
-        const { address, ...rest } = user;
-        const newAddress = e.target.value
-        const newUser = { address: newAddress, ...rest }
-        setuser(newUser);
-
+    if (user) {
+        console.log(user);
     }
 
 
 
+    const handelPlceOrder = (e) => {
+        e.preventDefault()
+        const order = {
+            email: user.email,
+            service: service.name,
+            serviceId: servceId,
+            address: e.target.address.value,
+            phone: e.target.phone.value
+        }
+        axios.post('http://localhost:5000/order', order)
+            .then(response => {
+
+                const { data } = response
+                if (data.insertedId) {
+                    toast('your order is book')
+                    e.target.reset()
+                }
+            })
+
+
+    }
+
+
     return (
         <div className='w-50 mx-auto'>
-            <h2>plaese Order : {service.name}</h2>
-            <form>
-                <input className='w-100 mb-3' value={user.name} type="text" name='Name' placeholder='Name' required />
+            <h2>plaese Order : {service.displayName}</h2>
+            <form onSubmit={handelPlceOrder}>
+                <input className='w-100 mb-3' value={user?.displayName} type="text" name='name' placeholder='Name' required readOnly disabled />
                 <br />
-                <input className='w-100 mb-3' value={user.email} type="email" name='email' placeholder='email' required />
+                <input className='w-100 mb-3' value={user.email} type="email" name='email' placeholder='email' required readOnly disabled />
                 <br />
                 <input className='w-100 mb-3' value={service.name} type="text" name='service' placeholder='service' required />
                 <br />
-                <input onChange={handelDataChange} className='w-100 mb-3' value={user.address} type="text" name='address' placeholder='address' required />
+                <input className='w-100 mb-3' value={user.address} type="text" name='address' placeholder='address' required autoComplete='off' />
                 <br />
                 <input className='w-100 mb-3' value={user.phone} type="text" name='phone' placeholder='phone' required />
                 <br />

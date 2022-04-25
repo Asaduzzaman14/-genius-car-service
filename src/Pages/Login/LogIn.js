@@ -6,15 +6,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../fairbase.init';
 import Loading from './Loading/Loading';
 import SocilaLogin from './SocilaLogin/SocilaLogin';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageTitle from '../Shared/PageTitle/PageTitle';
+import axios from 'axios';
 
 const LogIn = () => {
-
-
-
-
     const emailRef = useRef('')
     const passwordRef = useRef('')
     const navigate = useNavigate()
@@ -40,16 +37,18 @@ const LogIn = () => {
 
 
     if (user) {
-        navigate(from, { replace: true })
+        // navigate(from, { replace: true })
     }
 
-    const handelSubmit = (e) => {
+    const handelSubmit = async (e) => {
         e.preventDefault()
         const email = emailRef.current.value
         const password = passwordRef.current.value
 
-        signInWithEmailAndPassword(email, password)
-
+        await signInWithEmailAndPassword(email, password)
+        const { data } = await axios.post('http://localhost:5000/login', { email })
+        localStorage.setItem('accessToken', data)
+        navigate(from, { replace: true })
     }
 
     const resetPassword = async () => {
@@ -98,7 +97,7 @@ const LogIn = () => {
                 <SocilaLogin></SocilaLogin>
             </Form>
             <p>{hookError}</p>
-            <ToastContainer />
+
         </div>
     );
 };

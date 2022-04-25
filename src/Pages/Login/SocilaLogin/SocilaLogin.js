@@ -4,10 +4,15 @@ import facebook from '../../../images/social/facebook.png'
 import github from '../../../images/social/github.png'
 import auth from '../../../fairbase.init';
 import { useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/auth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const SocilaLogin = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+
+
+    const from = location.state?.from.pathname || '/'
+
 
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
     const [signInWithGithub, user2, loading2, error2] = useSignInWithGithub(auth);
@@ -25,7 +30,7 @@ const SocilaLogin = () => {
 
     }
     if (user || user2) {
-        navigate('/home')
+        navigate(from, { replace: true })
     }
 
     return (
