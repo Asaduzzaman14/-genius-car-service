@@ -27,7 +27,7 @@ const Checkout = () => {
             address: e.target.address.value,
             phone: e.target.phone.value
         }
-        axios.post('http://localhost:5000/order', order)
+        axios.post('https://limitless-brushlands-16762.herokuapp.com/order', order)
             .then(response => {
 
                 const { data } = response

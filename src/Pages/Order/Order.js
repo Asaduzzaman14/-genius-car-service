@@ -8,14 +8,13 @@ import auth from '../../fairbase.init';
 
 const Order = () => {
     const [orders, setOrders] = useState([])
-    const { user } = useAuthState()
-
+    const { user } = useAuthState(auth)
     const navigate = useNavigate()
     useEffect(() => {
 
         const getOrders = async () => {
             const email = user.email
-            const url = `http://localhost:5000/order?email=${email}s`
+            const url = `https://limitless-brushlands-16762.herokuapp.com/order?email=${email}`
             try {
                 const { data } = await axiosPrivate.get(url)
                 setOrders(data)
@@ -36,6 +35,11 @@ const Order = () => {
     return (
         <div>
             <h2>Your Orders {orders.length}</h2>
+            {
+                orders.map(order => <div key={order._id}>
+                    <p>{order.email} : {order.service}</p>
+                </div>)
+            }
 
         </div>
     );
